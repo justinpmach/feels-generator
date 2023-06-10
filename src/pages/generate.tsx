@@ -3,15 +3,25 @@ import Head from "next/head";
 import React, { useState } from "react";
 import { FormGroup } from "~/component/FormGroup";
 import { Input } from "~/component/Input";
+import { api } from "~/utils/api";
 
 const GeneratePage: NextPage = () => {
   const [form, setForm] = useState({
     prompt: "",
   });
 
+  const generateImage = api.generate.generateImage.useMutation({
+    onSuccess(data) {
+      console.log("muatation finished", data);
+    },
+  });
   function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
     // submit form data to backend
+    generateImage.mutate({
+      prompt: form.prompt,
+    });
+    //
   }
 
   function updateForm(key: string) {
