@@ -1,6 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable jsx-a11y/alt-text */
 import { type NextPage } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
+import Image from "next/image";
 import React, { useState } from "react";
 import { Button } from "~/component/Button";
 import { FormGroup } from "~/component/FormGroup";
@@ -11,10 +14,12 @@ const GeneratePage: NextPage = () => {
   const [form, setForm] = useState({
     prompt: "",
   });
+  const [imageUrl, setImageUrl] = useState("");
 
   const generateImage = api.generate.generateImage.useMutation({
     onSuccess(data) {
-      console.log("muatation finished", data);
+      if (!data.imageUrl) return;
+      setImageUrl(data.imageUrl);
     },
   });
   function handleFormSubmit(e: React.FormEvent) {
@@ -23,6 +28,8 @@ const GeneratePage: NextPage = () => {
     generateImage.mutate({
       prompt: form.prompt,
     });
+
+    setForm({ prompt: "" });
     //
   }
 
@@ -71,6 +78,13 @@ const GeneratePage: NextPage = () => {
           </FormGroup>
           <button className="rounded-md bg-blue-400 px-4 py-2">Submit</button>
         </form>
+
+        <Image
+          src={imageUrl}
+          alt="an image of generated prompt"
+          width="100"
+          height="100"
+        />
       </main>
     </>
   );
