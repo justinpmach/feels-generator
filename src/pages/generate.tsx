@@ -79,8 +79,8 @@ const GeneratePage: NextPage = () => {
           <button className="rounded-md bg-blue-400 px-4 py-2">Submit</button>
         </form>
 
-        <Image
-          src={imageUrl}
+        <img
+          src={`data:image/png;base64,${imageUrl}`}
           alt="an image of generated prompt"
           width="100"
           height="100"
