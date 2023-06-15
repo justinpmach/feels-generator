@@ -16,6 +16,8 @@ const s3 = new AWS.S3({
   region: "us-east-1",
 });
 
+const FEELS_BUCKET = "feels-generator";
+
 const configuration = new Configuration({
   apiKey: env.DALLE_API_KEY,
 });
@@ -80,7 +82,7 @@ export const generateRouter = createTRPCRouter({
 
       await s3
         .putObject({
-          Bucket: "feels-generator",
+          Bucket: FEELS_BUCKET,
           Body: Buffer.from(base64EncodedImage!, "base64"),
           Key: imageAi.id,
           ContentEncoding: "base64",
@@ -89,7 +91,7 @@ export const generateRouter = createTRPCRouter({
         .promise();
 
       return {
-        imageUrl: base64EncodedImage,
+        imageUrl: `https://${FEELS_BUCKET}.s3.amazonaws.com/${imageAi.id}`,
       };
     }),
 });
