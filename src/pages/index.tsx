@@ -5,7 +5,7 @@ import { LinkButton } from "~/component/LinkButton";
 
 function HeroBanner() {
   return (
-    <section className="grid grid-cols-2 gap-12 px-8">
+    <section className="mb-24 mt-12 grid grid-cols-1 gap-12 px-8 sm:mt-24 sm:grid-cols-2">
       <div className="flex flex-col gap-4">
         <h1 className="text-6xl">
           Generate an beautiful images with your favorite songs
@@ -17,7 +17,13 @@ function HeroBanner() {
           Generate Images
         </LinkButton>
       </div>
-      <Image src="/yellow-ai.png" alt="banner image" width="400" height="300" />
+      <Image
+        src="/yellow-ai.png"
+        alt="banner image"
+        width="400"
+        height="300"
+        className="order-first sm:order-none"
+      />
     </section>
   );
 }

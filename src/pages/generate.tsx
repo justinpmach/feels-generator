@@ -20,6 +20,7 @@ const GeneratePage: NextPage = () => {
       setImageUrl(data.imageUrl);
     },
   });
+
   function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
     // submit form data to backend
