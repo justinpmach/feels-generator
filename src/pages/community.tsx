@@ -6,16 +6,16 @@ import Head from "next/head";
 import Image from "next/image";
 import { api } from "~/utils/api";
 
-const CollectionPage: NextPage = () => {
-  const images = api.images.getImages.useQuery();
+const CommunityPage: NextPage = () => {
+  const images = api.images.getCommunityImages.useQuery();
   return (
     <>
       <Head>
-        <title>Your Feels Image</title>
+        <title>Community Images</title>
         <meta name="description" content="Your Feel Images" />
       </Head>
       <main className="container mx-auto mt-24 flex min-h-screen flex-col gap-4 px-8">
-        <h1 className="text-4xl">Your Images</h1>
+        <h1 className="text-4xl">Community Images</h1>
         <ul className="grid grid-cols-2 gap-4 sm:grid-cols-4 md:grid-cols-6">
           {images.data?.map((image: ImageAi) => (
             <li key={image.id}>
@@ -34,4 +34,4 @@ const CollectionPage: NextPage = () => {
   );
 };
 
-export default CollectionPage;
+export default CommunityPage;
