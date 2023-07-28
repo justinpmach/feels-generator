@@ -12,10 +12,15 @@ export function Header() {
   return (
     <header className="container mx-auto flex justify-between px-4 dark:bg-gray-800 2xl:px-0">
       <LinkPrimary href="/">LOGO</LinkPrimary>
-      <ul>
+      <ul className="flex gap-4">
         <li>
           <Link href="/generate">Generate</Link>
         </li>
+        {isLoggedIn && (
+          <li>
+            <LinkPrimary href="/collection">Collections</LinkPrimary>
+          </li>
+        )}
       </ul>
       <ul className="flex gap-4">
         {isLoggedIn && (
