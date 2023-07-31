@@ -23,13 +23,13 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-async function generateImage(prompt: string): Promise<string | undefined> {
+async function generateImage(prompt: string, quantity = 1) {
   if (env.MOCK_DALLE === "true") {
-    return b64Image;
+    return new Array<string>(quantity).fill(b64Image);
   } else {
     const response = await openai.createImage({
       prompt,
-      n: 1,
+      n: quantity,
       size: "512x512",
       response_format: "b64_json",
     });
@@ -38,7 +38,7 @@ async function generateImage(prompt: string): Promise<string | undefined> {
     console.log(response.data.data[0]?.b64_json);
     console.log("---");
 
-    return response.data.data[0]?.b64_json;
+    return response.data.data.map((result) => result.b64_json || "");
   }
 }
 
@@ -48,6 +48,7 @@ export const generateRouter = createTRPCRouter({
       z.object({
         prompt: z.string(),
         color: z.string(),
+        quantity: z.number().min(1).max(10),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -75,27 +76,36 @@ export const generateRouter = createTRPCRouter({
       // const finalPrompt = `a modern icon in ${input.color} of ${input.prompt}`;
       const finalPrompt = `${input.prompt}`;
 
-      const base64EncodedImage = await generateImage(finalPrompt);
+      const base64EncodedImages = await generateImage(
+        finalPrompt,
+        input.quantity
+      );
 
-      const imageAi = await ctx.prisma.imageAi.create({
-        data: {
-          prompt: input.prompt,
-          userId: ctx.session.user.id,
-        },
-      });
-
-      await s3
-        .putObject({
-          Bucket: FEELS_BUCKET,
-          Body: Buffer.from(base64EncodedImage!, "base64"),
-          Key: imageAi.id,
-          ContentEncoding: "base64",
-          ContentType: "image/png",
+      const createdImages = await Promise.all(
+        base64EncodedImages.map(async (image) => {
+          const imageAi = await ctx.prisma.imageAi.create({
+            data: {
+              prompt: input.prompt,
+              userId: ctx.session.user.id,
+            },
+          });
+          await s3
+            .putObject({
+              Bucket: FEELS_BUCKET,
+              Body: Buffer.from(image, "base64"),
+              Key: imageAi.id,
+              ContentEncoding: "base64",
+              ContentType: "image/png",
+            })
+            .promise();
+          return imageAi;
         })
-        .promise();
+      );
 
-      return {
-        imageUrl: `https://${FEELS_BUCKET}.s3.amazonaws.com/${imageAi.id}`,
-      };
+      return createdImages.map((imageAi) => {
+        return {
+          imageUrl: `https://${FEELS_BUCKET}.s3.amazonaws.com/${imageAi.id}`,
+        };
+      });
     }),
 });

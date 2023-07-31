@@ -20,24 +20,30 @@ const colors = [
   "black",
 ];
 
+const shapes = ["square", "circle", "triangle", "diamond"];
+
 const GeneratePage: NextPage = () => {
   const [form, setForm] = useState({
     prompt: "",
     color: "",
+    shape: "",
+    quantity: "1",
   });
-  const [imageUrl, setImageUrl] = useState("");
+  const [imagesUrl, setImagesUrl] = useState<{ imageUrl: string }[]>([]);
 
   const generateImage = api.generate.generateImage.useMutation({
     onSuccess(data) {
-      if (!data.imageUrl) return;
-      setImageUrl(data.imageUrl);
+      setImagesUrl(data);
     },
   });
 
   function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
     // submit form data to backend
-    generateImage.mutate(form);
+    generateImage.mutate({
+      ...form,
+      quantity: parseInt(form.quantity),
+    });
 
     // setForm((prev) => ({ ...prev, prompt: "" }));
     //
@@ -65,14 +71,19 @@ const GeneratePage: NextPage = () => {
           <h2>1. Describe the image you want to output</h2>
           <FormGroup className="mb-12">
             <label>Prompt</label>
-            <Input value={form.prompt} onChange={updateForm("prompt")} />
+            <Input
+              required
+              value={form.prompt}
+              onChange={updateForm("prompt")}
+            />
           </FormGroup>
 
           <h2>2. Pick Image Color</h2>
-          <FormGroup className="grid grid-cols-4">
+          <FormGroup className="mb-12 grid grid-cols-4">
             {colors.map((color) => (
               <label key={color} className="flex gap-2 text-2xl">
                 <input
+                  required
                   type="radio"
                   name="color"
                   checked={color === form.color}
@@ -83,6 +94,35 @@ const GeneratePage: NextPage = () => {
             ))}
           </FormGroup>
 
+          <h2>3. Pick Image Shape</h2>
+          <FormGroup className="mb-12 grid grid-cols-4">
+            {shapes.map((shape) => (
+              <label key={shape} className="flex gap-2 text-2xl">
+                <input
+                  required
+                  type="radio"
+                  name="color"
+                  checked={shape === form.shape}
+                  onChange={() => setForm((prev) => ({ ...prev, shape }))}
+                ></input>
+                {shape}
+              </label>
+            ))}
+          </FormGroup>
+
+          <h2 className="text-xl">4. Quantity</h2>
+          <FormGroup className="mb-12">
+            <label>Number of Images</label>
+
+            <Input
+              required
+              inputMode="numeric"
+              pattern="[1-9]|10"
+              value={form.quantity}
+              onChange={updateForm("quantity")}
+            ></Input>
+          </FormGroup>
+
           <Button
             disabled={generateImage.isLoading}
             isLoading={generateImage.isLoading}
@@ -91,17 +131,20 @@ const GeneratePage: NextPage = () => {
           </Button>
         </form>
 
-        {imageUrl && (
+        {imagesUrl.length > 0 && (
           <>
             <h2 className="text-xl">Your Images</h2>
             <section className="mb-12 grid grid-cols-4 gap-4">
-              <Image
-                src={imageUrl}
-                alt="an image of generated prompt"
-                width="100"
-                height="100"
-                className="w-full"
-              />
+              {imagesUrl.map(({ imageUrl }) => (
+                <Image
+                  key={imageUrl}
+                  src={imageUrl}
+                  alt="an image of generated prompt"
+                  width="512"
+                  height="512"
+                  className="w-full"
+                />
+              ))}
             </section>
           </>
         )}

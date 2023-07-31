@@ -10,6 +10,9 @@ export const imagesRouter = createTRPCRouter({
       where: {
         userId: ctx.session.user.id,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     return images;
   }),
