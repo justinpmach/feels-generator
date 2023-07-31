@@ -48,6 +48,8 @@ export const generateRouter = createTRPCRouter({
       z.object({
         prompt: z.string(),
         color: z.string(),
+        shape: z.string(),
+        style: z.string(),
         quantity: z.number().min(1).max(10),
       })
     )
@@ -56,12 +58,12 @@ export const generateRouter = createTRPCRouter({
         where: {
           id: ctx.session.user.id,
           credits: {
-            gte: 1,
+            gte: input.quantity,
           },
         },
         data: {
           credits: {
-            decrement: 1,
+            decrement: input.quantity,
           },
         },
       });

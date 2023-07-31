@@ -22,23 +22,36 @@ const colors = [
 
 const shapes = ["square", "circle", "triangle", "diamond"];
 
+const styles = [
+  "claymorphic",
+  "3d rendered",
+  "pixelated",
+  "illustrated color pencil",
+];
+
 const GeneratePage: NextPage = () => {
   const [form, setForm] = useState({
     prompt: "",
     color: "",
     shape: "",
+    style: "",
     quantity: "1",
   });
+  const [error, setError] = useState("");
   const [imagesUrl, setImagesUrl] = useState<{ imageUrl: string }[]>([]);
 
   const generateImage = api.generate.generateImage.useMutation({
     onSuccess(data) {
       setImagesUrl(data);
     },
+    onError(error) {
+      setError(error.message);
+    },
   });
 
   function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setError("");
     // submit form data to backend
     generateImage.mutate({
       ...form,
@@ -110,7 +123,23 @@ const GeneratePage: NextPage = () => {
             ))}
           </FormGroup>
 
-          <h2 className="text-xl">4. Quantity</h2>
+          <h2>4. Pick Image Style</h2>
+          <FormGroup className="mb-12 grid grid-cols-4">
+            {styles.map((style) => (
+              <label key={style} className="flex gap-2 text-2xl">
+                <input
+                  required
+                  type="radio"
+                  name="color"
+                  checked={style === form.style}
+                  onChange={() => setForm((prev) => ({ ...prev, style }))}
+                ></input>
+                {style}
+              </label>
+            ))}
+          </FormGroup>
+
+          <h2 className="text-xl">5. Quantity</h2>
           <FormGroup className="mb-12">
             <label>Number of Images</label>
 
@@ -122,6 +151,12 @@ const GeneratePage: NextPage = () => {
               onChange={updateForm("quantity")}
             ></Input>
           </FormGroup>
+
+          {error && (
+            <div className="rounded bg-red-500 px-8 py-4 text-xl text-white">
+              {error}
+            </div>
+          )}
 
           <Button
             disabled={generateImage.isLoading}
