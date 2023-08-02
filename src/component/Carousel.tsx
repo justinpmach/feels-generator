@@ -1,34 +1,45 @@
-import React, { useState } from "react";
+import { Box, Slide, useDisclosure } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { Button } from "~/component/Button";
 
-export default function Carousel({ children: questions }) {
-  // console.log("PROPS: ", props);
-  // console.log("CHILDREN: ", props.children);
+export default function Carousel({
+  children: questions,
+  currIndex,
+  carouselIdx,
+}: {
+  children: Array<string>;
+  currIndex: number;
+  carouselIdx: number;
+}) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const prevSlide = () => {
-    setCurrentIndex((current) =>
-      current === 0 ? questions.length - 1 : current - 1
-    );
-  };
-  const nextSlide = () => {
-    setCurrentIndex((current) =>
-      current === questions.length - 1 ? 0 : current + 1
-    );
-  };
+  useEffect(() => {
+    setCurrentIndex(currIndex);
+  }, [currentIndex]);
 
+  function handleSlides(index: number) {
+    return currentIndex === index;
+  }
+
+  // const { isOpen, onToggle } = useDisclosure();
   return (
-    <div className="relative overflow-hidden">
-      <div
-        className="flex transition-transform duration-500 ease-out"
-        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+    <div>
+      <Slide
+        direction="right"
+        in={currentIndex === carouselIdx}
+        style={{ zIndex: 20 }}
       >
-        {questions}
-      </div>
-      <div className="absolute inset-0 flex items-center justify-between p-4">
-        <Button onClick={() => prevSlide()}>Back</Button>
-        <Button onClick={() => nextSlide()}>Next</Button>
-      </div>
+        <Box
+          p="20px"
+          color="white"
+          mt="10"
+          bg="blue.400"
+          rounded="sm"
+          shadow="md"
+        >
+          {carouselIdx + 1}. {questions}
+        </Box>
+      </Slide>
     </div>
   );
 }

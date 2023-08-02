@@ -13,7 +13,7 @@ export function Header() {
   const credits = api.user.getCredits.useQuery();
 
   return (
-    <header className="dark:bg-gray-900">
+    <header className="z-0 text-white dark:bg-gray-600">
       <div className="container mx-auto flex h-12 items-center justify-between">
         <LinkPrimary href="/">LOGO</LinkPrimary>
         <ul className="flex gap-4">
