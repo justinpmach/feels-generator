@@ -6,13 +6,10 @@ import Head from "next/head";
 import Image from "next/image";
 import React, { useState } from "react";
 // import { Button } from "~/component/Button";
-// import Carousel from "~/component/Carousel";
+import Carousel from "~/component/Carousel";
 import { FormGroup } from "~/component/FormGroup";
 import { Input } from "~/component/Input";
 import { api } from "~/utils/api";
-
-import { motion, AnimatePresence } from "framer-motion";
-import TestPage from "./test";
 
 const colors = [
   "blue",
@@ -52,7 +49,6 @@ const GeneratePage: NextPage = () => {
     quantity: "1",
   });
   const [error, setError] = useState("");
-  const [showQuestion, setShowQuestion] = useState(0);
   const [imagesUrl, setImagesUrl] = useState<{ imageUrl: string }[]>([]);
 
   const generateImage = api.generate.generateImage.useMutation({
@@ -115,25 +111,10 @@ const GeneratePage: NextPage = () => {
             className="flex min-h-screen w-full flex-col"
             onSubmit={handleFormSubmit}
           >
-            {/* <AnimatePresence>
-              {questions.map(
-                (q, index) =>
-                  handleSlides(index) && (
-                    <motion.div
-                      key={q.question}
-                      className="box bg-blue-400 text-black"
-                      initial={{ translateX: "100%", opacity: 1 }}
-                      animate={{ translateX: 0, opacity: 1 }}
-                      exit={{
-                        translateX: "-100%",
-                        transition: { duration: 0.1 },
-                      }}
-                      transition={{ duration: 0.2, ease: "easeInOut" }}
-                    > */}
             {questions.map((q, index) => (
               <>
                 {currentIndex === 0 && (
-                  <TestPage active={handleSlides(index)}>
+                  <Carousel active={handleSlides(index)}>
                     <FormGroup>
                       <label key={index}>{q.question}</label>
                       <Input
@@ -142,11 +123,11 @@ const GeneratePage: NextPage = () => {
                         onChange={updateForm("prompt")}
                       />
                     </FormGroup>
-                  </TestPage>
+                  </Carousel>
                 )}
 
                 {currentIndex === 1 && (
-                  <TestPage active={handleSlides(index)}>
+                  <Carousel active={handleSlides(index)}>
                     <FormGroup>
                       <label key={index}>{q.question}</label>
                       {colors.map((color) => (
@@ -164,11 +145,11 @@ const GeneratePage: NextPage = () => {
                         </label>
                       ))}
                     </FormGroup>
-                  </TestPage>
+                  </Carousel>
                 )}
 
                 {currentIndex === 2 && (
-                  <TestPage active={handleSlides(index)}>
+                  <Carousel active={handleSlides(index)}>
                     <FormGroup>
                       {shapes.map((shape) => (
                         <label key={shape} className="flex gap-2 text-2xl">
@@ -185,11 +166,11 @@ const GeneratePage: NextPage = () => {
                         </label>
                       ))}
                     </FormGroup>
-                  </TestPage>
+                  </Carousel>
                 )}
 
                 {currentIndex === 3 && (
-                  <TestPage active={handleSlides(index)}>
+                  <Carousel active={handleSlides(index)}>
                     <FormGroup>
                       <label key={index}>{q.question}</label>
 
@@ -208,11 +189,11 @@ const GeneratePage: NextPage = () => {
                         </label>
                       ))}
                     </FormGroup>
-                  </TestPage>
+                  </Carousel>
                 )}
 
                 {currentIndex === 4 && (
-                  <TestPage active={handleSlides(index)}>
+                  <Carousel active={handleSlides(index)}>
                     <FormGroup>
                       <label key={index}>{q.question}</label>
 
@@ -224,7 +205,7 @@ const GeneratePage: NextPage = () => {
                         onChange={updateForm("quantity")}
                       ></Input>
                     </FormGroup>
-                  </TestPage>
+                  </Carousel>
                 )}
               </>
             ))}
