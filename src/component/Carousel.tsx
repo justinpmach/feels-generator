@@ -18,7 +18,7 @@ export default function Carousel({
     <AnimatePresence>
       {isActive && (
         <motion.div
-          className="box bg-blue-400 text-black"
+          className="flex h-56 w-full items-center justify-center rounded-md bg-blue-400 text-black shadow-md"
           initial={{ translateX: "100%", opacity: 1 }}
           animate={{ translateX: 0, opacity: 1 }}
           exit={{

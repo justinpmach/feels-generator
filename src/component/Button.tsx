@@ -5,8 +5,10 @@ export function Button(
   props: React.ComponentPropsWithoutRef<"button"> & {
     variant?: "primary" | "secondary";
     isLoading?: boolean;
+    type?: "button" | "submit";
   }
 ) {
+  const type = props.type ? props.type : "button";
   const colors =
     (props.variant ?? "primary") === "primary"
       ? "bg-blue-400 hover:bg-blue-500"
@@ -14,6 +16,7 @@ export function Button(
 
   return (
     <button
+      type={type}
       {...props}
       className={clsx(
         "flex items-center justify-center gap-2 rounded px-4 py-2 disabled:bg-gray-600",

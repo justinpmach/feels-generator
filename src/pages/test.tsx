@@ -1,11 +1,5 @@
 import { type NextPage } from "next";
-import {
-  ReactElement,
-  ReactFragment,
-  ReactNode,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const questions = [
