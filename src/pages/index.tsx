@@ -8,7 +8,7 @@ function HeroBanner() {
     <section className="mb-24 mt-12 grid grid-cols-1 gap-12 px-8 sm:mt-24 sm:grid-cols-2">
       <div className="flex flex-col gap-4">
         <h1 className="text-6xl">
-          Generate an beautiful images with your favorite songs
+          Generate beautiful images with your favorite songs
         </h1>
         <p className="text-2xl">
           Use AI to help sculpt each image to express the emotion of each song
