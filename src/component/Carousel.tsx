@@ -1,45 +1,35 @@
-import { Box, Slide, useDisclosure } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { Button } from "~/component/Button";
+import { type ReactNode, useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Carousel({
-  children: questions,
-  currIndex,
-  carouselIdx,
+  children,
+  active,
 }: {
-  children: Array<string>;
-  currIndex: number;
-  carouselIdx: number;
+  children: ReactNode;
+  active: boolean;
 }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    setCurrentIndex(currIndex);
-  }, [currentIndex]);
+    setIsActive(active);
+  }, [active]);
 
-  function handleSlides(index: number) {
-    return currentIndex === index;
-  }
-
-  // const { isOpen, onToggle } = useDisclosure();
   return (
-    <div>
-      <Slide
-        direction="right"
-        in={currentIndex === carouselIdx}
-        style={{ zIndex: 20 }}
-      >
-        <Box
-          p="20px"
-          color="white"
-          mt="10"
-          bg="blue.400"
-          rounded="sm"
-          shadow="md"
+    <AnimatePresence>
+      {isActive && (
+        <motion.div
+          className="box bg-blue-400 text-black"
+          initial={{ translateX: "100%", opacity: 1 }}
+          animate={{ translateX: 0, opacity: 1 }}
+          exit={{
+            translateX: "-100%",
+            transition: { duration: 0.1 },
+          }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
         >
-          {carouselIdx + 1}. {questions}
-        </Box>
-      </Slide>
-    </div>
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

@@ -1,15 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { Box, Slide, Button } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { useState } from "react";
+import React, { useState } from "react";
 // import { Button } from "~/component/Button";
 // import Carousel from "~/component/Carousel";
 import { FormGroup } from "~/component/FormGroup";
 import { Input } from "~/component/Input";
 import { api } from "~/utils/api";
+
+import { motion, AnimatePresence } from "framer-motion";
+import TestPage from "./test";
 
 const colors = [
   "blue",
@@ -31,27 +34,16 @@ const styles = [
   "illustrated color pencil",
 ];
 
-const questions: Array<string> = [
-  "Describe the image you want to output",
-  "Pick Image Color",
-  "Pick Image Shape",
-  "Pick Image Style",
-  "Pick Image Quantity",
+const questions = [
+  { question: "Describe the image you want to output" },
+  { question: "Pick Image Color" },
+  { question: "Pick Image Shape" },
+  { question: "Pick Image Style" },
+  { question: "Pick Image Quantity" },
 ];
 
 const GeneratePage: NextPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  // const prevSlide = () => {
-  //   const isFirstSlide = currentIndex === 0;
-  //   const newIndex = isFirstSlide ? 1 : currentIndex - 1;
-  //   setCurrentIndex(newIndex);
-  // };
-
-  // const nextSlide = () => {
-  //   const isFirstSlide = currentIndex === 0;
-  //   const newIndex = isFirstSlide ? 1 : currentIndex - 1;
-  //   setCurrentIndex(newIndex);
-  // };
   const [form, setForm] = useState({
     prompt: "",
     color: "",
@@ -84,16 +76,6 @@ const GeneratePage: NextPage = () => {
     // setForm((prev) => ({ ...prev, prompt: "" }));
     //
   }
-
-  // function handleNext(index: number) {
-  //   if (index === 5) return;
-  //   setShowQuestion(index++);
-  // }
-  // function handleBack(index: number) {
-  //   if (index === 0) return;
-  //   setShowQuestion(index--);
-  // }
-
   function updateForm(key: string) {
     return function (e: React.ChangeEvent<HTMLInputElement>) {
       setForm((prev) => ({
@@ -129,58 +111,66 @@ const GeneratePage: NextPage = () => {
         <div className="container mt-12 flex min-h-screen flex-col gap-4 px-8">
           <h1 className="text-3xl">Generate Your Image</h1>
 
-          <form className="flex w-full flex-col" onSubmit={handleFormSubmit}>
+          <form
+            className="flex min-h-screen w-full flex-col"
+            onSubmit={handleFormSubmit}
+          >
+            {/* <AnimatePresence>
+              {questions.map(
+                (q, index) =>
+                  handleSlides(index) && (
+                    <motion.div
+                      key={q.question}
+                      className="box bg-blue-400 text-black"
+                      initial={{ translateX: "100%", opacity: 1 }}
+                      animate={{ translateX: 0, opacity: 1 }}
+                      exit={{
+                        translateX: "-100%",
+                        transition: { duration: 0.1 },
+                      }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
+                    > */}
             {questions.map((q, index) => (
-              <Slide
-                key={index}
-                direction="right"
-                in={handleSlides(index)}
-                style={{
-                  zIndex: 10,
-                }}
-              >
-                <Box
-                  p="20px"
-                  color="white"
-                  mt="64"
-                  bg="blue.400"
-                  rounded="sm"
-                  shadow="md"
-                >
-                  <FormGroup className="mb-4">
-                    <label>
-                      {currentIndex + 1}. {q}
-                    </label>
-
-                    {currentIndex === 0 && (
+              <>
+                {currentIndex === 0 && (
+                  <TestPage active={handleSlides(index)}>
+                    <FormGroup>
+                      <label key={index}>{q.question}</label>
                       <Input
                         required
                         value={form.prompt}
                         onChange={updateForm("prompt")}
                       />
-                    )}
+                    </FormGroup>
+                  </TestPage>
+                )}
 
-                    {currentIndex === 1 && (
-                      <>
-                        {colors.map((color) => (
-                          <label key={color} className="flex gap-2 text-2xl">
-                            <input
-                              required
-                              type="radio"
-                              name="color"
-                              checked={color === form.color}
-                              onChange={() =>
-                                setForm((prev) => ({ ...prev, color }))
-                              }
-                            ></input>
-                            {color}
-                          </label>
-                        ))}
-                      </>
-                    )}
+                {currentIndex === 1 && (
+                  <TestPage active={handleSlides(index)}>
+                    <FormGroup>
+                      <label key={index}>{q.question}</label>
+                      {colors.map((color) => (
+                        <label key={color} className="flex gap-2 text-2xl">
+                          <input
+                            required
+                            type="radio"
+                            name="color"
+                            checked={color === form.color}
+                            onChange={() =>
+                              setForm((prev) => ({ ...prev, color }))
+                            }
+                          ></input>
+                          {color}
+                        </label>
+                      ))}
+                    </FormGroup>
+                  </TestPage>
+                )}
 
-                    {currentIndex === 2 &&
-                      shapes.map((shape) => (
+                {currentIndex === 2 && (
+                  <TestPage active={handleSlides(index)}>
+                    <FormGroup>
+                      {shapes.map((shape) => (
                         <label key={shape} className="flex gap-2 text-2xl">
                           <input
                             required
@@ -194,9 +184,16 @@ const GeneratePage: NextPage = () => {
                           {shape}
                         </label>
                       ))}
+                    </FormGroup>
+                  </TestPage>
+                )}
 
-                    {currentIndex === 3 &&
-                      styles.map((style) => (
+                {currentIndex === 3 && (
+                  <TestPage active={handleSlides(index)}>
+                    <FormGroup>
+                      <label key={index}>{q.question}</label>
+
+                      {styles.map((style) => (
                         <label key={style} className="flex gap-2 text-2xl">
                           <input
                             required
@@ -206,12 +203,19 @@ const GeneratePage: NextPage = () => {
                             onChange={() =>
                               setForm((prev) => ({ ...prev, style }))
                             }
-                          ></input>
+                          />
                           {style}
                         </label>
                       ))}
+                    </FormGroup>
+                  </TestPage>
+                )}
 
-                    {currentIndex === 4 && (
+                {currentIndex === 4 && (
+                  <TestPage active={handleSlides(index)}>
+                    <FormGroup>
+                      <label key={index}>{q.question}</label>
+
                       <Input
                         required
                         inputMode="numeric"
@@ -219,10 +223,10 @@ const GeneratePage: NextPage = () => {
                         value={form.quantity}
                         onChange={updateForm("quantity")}
                       ></Input>
-                    )}
-                  </FormGroup>
-                </Box>
-              </Slide>
+                    </FormGroup>
+                  </TestPage>
+                )}
+              </>
             ))}
             <div className="mt-30 flex-col-2 mx-auto flex flex-wrap justify-center gap-4">
               <Button
@@ -246,6 +250,15 @@ const GeneratePage: NextPage = () => {
                 </Button>
               )}
             </div>
+            {/* <label>
+                            {currentIndex + 1}. + {q}
+                          </label> */}
+            {/* </motion.div>
+                  )
+              )}
+            </AnimatePresence> */}
+            {/* </Box>
+               </Slide> */}
 
             {error && (
               <div className="rounded bg-red-500 px-8 py-4 text-xl text-white">
