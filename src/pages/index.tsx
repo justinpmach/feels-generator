@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import Banner from "~/component/Banner";
 import { LinkButton } from "~/component/LinkButton";
 
 function HeroBanner() {
@@ -39,6 +40,7 @@ const Home: NextPage = () => {
       <main>
         <div className="flex flex-col items-center justify-center">
           <HeroBanner />
+          <Banner />
         </div>
       </main>
     </>

@@ -4,7 +4,7 @@ import { Box, Slide } from "@chakra-ui/react";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import React, { MouseEventHandler, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "~/component/Button";
 import Carousel from "~/component/Carousel";
 import { FormGroup } from "~/component/FormGroup";
@@ -12,14 +12,14 @@ import { Input } from "~/component/Input";
 import { api } from "~/utils/api";
 
 const colors = [
-  "blue",
-  "red",
-  "pink",
-  "green",
-  "orange",
-  "yellow",
-  "white",
-  "black",
+  { id: 1, value: "blue" },
+  { id: 2, value: "red" },
+  { id: 3, value: "pink" },
+  { id: 4, value: "green" },
+  { id: 5, value: "orange" },
+  { id: 6, value: "yellow" },
+  { id: 7, value: "white" },
+  { id: 8, value: "black" },
 ];
 
 const shapes = ["square", "circle", "triangle", "diamond"];
@@ -41,6 +41,7 @@ const questions = [
 
 const GeneratePage: NextPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
   const [form, setForm] = useState({
     prompt: "",
     color: "",
@@ -137,7 +138,7 @@ const GeneratePage: NextPage = () => {
           {imagesUrl.length > 0 && (
             <>
               <h2 className="mb-8 text-xl">Your Images: </h2>
-              <section className="mx-auto mb-8 grid grid-cols-4 gap-4 rounded-md bg-neutral-700 p-8">
+              <section className="mx-auto mb-8 grid grid-cols-4 gap-4 rounded-md bg-neutral-700 p-8 shadow-md">
                 {imagesUrl.map(({ imageUrl }) => (
                   <Image
                     key={imageUrl}
@@ -153,7 +154,7 @@ const GeneratePage: NextPage = () => {
           )}
 
           <form
-            className="container flex flex-col rounded-md bg-zinc-700 p-8"
+            className="container flex flex-col rounded-md bg-zinc-800 p-8"
             onSubmit={handleFormSubmit}
           >
             <h1 className="mb-4 text-3xl">Generate Your Image</h1>
@@ -181,19 +182,28 @@ const GeneratePage: NextPage = () => {
                       <label key={index} className="block text-white">
                         2. {q.question}
                       </label>
-                      <div className="grid grid-cols-4 gap-4">
-                        {colors.map((color) => (
-                          <label key={color}>
+                      <div className="grid w-full grid-cols-4 gap-2 rounded-md bg-white py-8 pl-12">
+                        {colors.map((color, index) => (
+                          <label
+                            className="mx-auto flex w-full items-center "
+                            htmlFor={`default-radio-${index}`}
+                            key={color.id}
+                          >
                             <input
+                              id={`default-radio-${index}`}
                               required
+                              className="mr-2 h-4 w-4 border border-gray-300 bg-gray-100 text-blue-600 shadow-md "
+                              name="default-radio"
                               type="radio"
-                              name="color"
-                              checked={color === form.color}
+                              checked={color.value === form.color}
                               onChange={() =>
-                                setForm((prev) => ({ ...prev, color }))
+                                setForm((prev) => ({
+                                  ...prev,
+                                  color: color.value,
+                                }))
                               }
-                            ></input>
-                            {color}
+                            />
+                            {color.value}
                           </label>
                         ))}
                       </div>
@@ -204,21 +214,30 @@ const GeneratePage: NextPage = () => {
                 {currentIndex === 2 && (
                   <Carousel active={handleSlides(index)}>
                     <FormGroup>
-                      <label key={index} className="block text-white">
+                      <label
+                        htmlFor={`default-radio-${index}`}
+                        key={index}
+                        className="block text-white"
+                      >
                         3. {q.question}
                       </label>
-                      <div className="grid grid-cols-4 gap-4">
+                      <div className="grid w-full grid-cols-4 gap-2 rounded-md bg-white py-8 pl-12">
                         {shapes.map((shape) => (
-                          <label key={shape} className="flex gap-2">
+                          <label
+                            key={shape}
+                            className="mx-auto flex w-full items-center"
+                          >
                             <input
+                              id={`default-radio-${index}`}
                               required
+                              className="mr-2 h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 shadow-md"
+                              name="default-radio"
                               type="radio"
-                              name="color"
                               checked={shape === form.shape}
                               onChange={() =>
                                 setForm((prev) => ({ ...prev, shape }))
                               }
-                            ></input>
+                            />
                             {shape}
                           </label>
                         ))}
@@ -233,13 +252,19 @@ const GeneratePage: NextPage = () => {
                       <label key={index} className="block text-white">
                         4. {q.question}
                       </label>
-                      <div className="grid grid-cols-4 gap-4">
-                        {styles.map((style) => (
-                          <label key={style} className="flex gap-2">
+                      <div className="grid w-full grid-cols-4 gap-2 rounded-md bg-white py-8 pl-12">
+                        {styles.map((style, index) => (
+                          <label
+                            htmlFor={`default-radio-${index}`}
+                            key={style}
+                            className="mx-auto flex w-full items-center"
+                          >
                             <input
+                              id={`default-radio-${index}`}
                               required
+                              className="mr-2 h-4 w-4 border-gray-300 bg-white text-blue-600 shadow-md"
+                              name="default-radio"
                               type="radio"
-                              name="color"
                               checked={style === form.style}
                               onChange={() =>
                                 setForm((prev) => ({ ...prev, style }))
@@ -272,7 +297,7 @@ const GeneratePage: NextPage = () => {
               </>
             ))}
 
-            <div className="mx-auto mt-8 flex w-full flex-wrap justify-center gap-4">
+            <div className="mx-auto mt-6 flex w-full flex-wrap justify-center gap-4">
               <Button
                 className="z-20"
                 disabled={currentIndex === 0}
@@ -303,7 +328,7 @@ const GeneratePage: NextPage = () => {
               )}
             </div>
 
-            <div className="mt-12 flex items-center justify-center gap-2">
+            <div className="mt-6 flex items-center justify-center gap-2">
               {questions.map((_, i) => (
                 <div
                   key={i}

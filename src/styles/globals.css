@@ -8,5 +8,17 @@ body {
 }
 
 main {
-  @apply min-h-screen bg-neutral-900 pt-8 text-white;
+  @apply bg-balloons bg-contain bg-fixed bg-center pt-8 text-white;
+}
+
+.bg-parallax {
+  background-image: linear-gradient(
+      rgba(134, 126, 137, 0.9),
+      rgba(138, 109, 154, 0.9)
+    ),
+    url("../../public/bball.png");
+}
+
+.bg-balloons {
+  background-image: url("../../public/balloons.png");
 }
