@@ -2,11 +2,13 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { type NextPage } from "next";
 import Head from "next/head";
+import { useEffect, useState } from "react";
 
 const TestEffectPage: NextPage = () => {
+  const [mount, setMount] = useState(false);
   // const elementRef = useRef<HTMLParagraphElement | null>(null);
   const enhance = (id: string) => {
-    // if (!id) return;
+    if (!id) return;
     const element: HTMLElement | null = document.getElementById(id);
     const text: string[] | null = element?.innerText.split("") || null;
     if (element) {
@@ -22,7 +24,13 @@ const TestEffectPage: NextPage = () => {
     }
   };
 
-  enhance("channel-link");
+  useEffect(() => {
+    if (!mount) {
+      enhance("channel-link");
+      setMount(true);
+    }
+  }, [mount]);
+
   return (
     <>
       <Head>
