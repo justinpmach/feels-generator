@@ -43,20 +43,20 @@ const TestEffectPage: NextPage = () => {
           <div id="text" className="">
             <div className="line">
               <p className="word">Imagine</p>
-              <p className="word">Create</p>
+              <p className="word alt">Create</p>
             </div>
             <div className="line">
-              <p className="word">Inspire</p>
-              <p className="word">Feel</p>
-            </div>
-            <div className="line">
-              <p className="word fancy">Generate</p>
+              <p className="word">Mind-Bending</p>
+              <p className="word alt">Feel</p>
             </div>
             <div className="line">
               {/* <p className="word fancy">@Jmachentash</p> */}
               <p id="channel-link" className="word fancy">
                 @Jmachentash
               </p>
+            </div>
+            <div className="line">
+              <p className="word fancy">Generate</p>
             </div>
           </div>
         </div>

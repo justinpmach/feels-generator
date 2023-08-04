@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { Box, Slide } from "@chakra-ui/react";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";

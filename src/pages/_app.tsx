@@ -11,17 +11,28 @@ import { Header } from "~/component/Header";
 
 import "~/styles/globals.css";
 
+import { Saira } from "next/font/google";
+const saira = Saira({ subsets: ["latin"] });
+
+// const saira = Saira({
+//   subsets: ["latin"],
+//   weight: ["400"],
+//   variable: "--font-saira",
+// });
+
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <ChakraProvider>
-      <SessionProvider session={session}>
-        <Header />
-        <Component {...pageProps} />
-      </SessionProvider>
-    </ChakraProvider>
+    <div className={saira.className}>
+      <ChakraProvider>
+        <SessionProvider session={session}>
+          <Header />
+          <Component {...pageProps} />
+        </SessionProvider>
+      </ChakraProvider>
+    </div>
   );
 };
 

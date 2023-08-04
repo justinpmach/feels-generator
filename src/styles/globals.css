@@ -4,17 +4,12 @@
 
 html,
 body {
-  height: 100%;
-}
-
-body {
-  @apply bg-neutral-900 text-white;
-  @apply font-poppins;
+  @apply bg-gray-900 text-white;
 }
 
 main {
   /* @apply bg-balloons bg-contain bg-fixed bg-center pt-8 text-white; */
-  @apply container mx-auto bg-black;
+  @apply bg-gray-900;
 }
 
 .bg-parallax {
@@ -35,7 +30,7 @@ main {
 
 /* TESTING */
 
-p {
+#text p {
   color: white;
   font-size: 8vw;
   margin: 0rem;
@@ -45,25 +40,44 @@ p {
   justify-content: space-between;
 }
 
-a {
-  text-decoration: none;
+.alt:hover {
+  text-shadow: 5px 5px #558abb;
 }
 
-#text:has(.fancy:hover) .word:not(.fancy) {
-  opacity: 0.2;
+#text:has(.fancy:hover) .word:not(.fancy, .alt) {
+  transition-duration: 800ms;
+  transform: translate(80%, 20%) rotate(0deg);
+  background: linear-gradient(to right, #30cfd0 0%, #b57dfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
+
+#text:has(.word) .word:not(.alt, .fancy) {
+  transition: transform 500ms ease;
+}
+
+/* #text:has(.alt:hover) {
+  transform: translate(-30%, 0%) rotate(0deg);
+  transition-duration: 500ms;
+} */
+/* #text:has(.word.alt:hover) .word:not(.alt, .fancy) {
+  transform: translate(0%, 40%) rotate(0deg);
+  transition-duration: 800ms;
+} */
 
 .fancy > .letter {
+  text-transform: uppercase;
   display: inline-block;
   transition: transform 350ms ease;
 }
 .fancy:hover > .letter {
   transition-duration: 800ms;
   text-transform: uppercase;
+  text-shadow: #fc0 1px 0 10px;
   color: white;
-  background: linear-gradient(to right, #30cfd0 0%, #330867 100%);
+  /* background: linear-gradient(to right, #30cfd0 0%, #b57dfa 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent; */
 }
 
 .fancy:hover > .letter:nth-child(1) {
